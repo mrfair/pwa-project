@@ -65,12 +65,29 @@ nav.navbar {
 .comment_list_text {
   width: 90px;
   display: inline-block;
+  margin-left: 3px;
+  margin-top: 5px;
 }
 
 .comment_list_block {
   margin: 4px;
   padding: 2px 4px;
-  border-bottom: 1px solid #E5E5E5;
+}
+
+.container_comment_list_level {
+  width: 24px;
+  display: inline-block;
+}
+
+.container_comment_list_level img {
+  width: 100%;
+}
+
+.comment_list_header {
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid #E9E9E9;
+  font-size: 14px;
 }
 
 .ellipsis {
@@ -100,6 +117,10 @@ nav.navbar {
   margin-bottom: 5px;
 }
 
+.mr5 {
+  margin-right: 5px;
+}
+
 .vm {
   vertical-align: middle;
 }
@@ -125,4 +146,8 @@ nav.navbar {
 
 .f12 {
   font-size: 12px;
+}
+
+.f16 {
+  font-size: 16px;
 }

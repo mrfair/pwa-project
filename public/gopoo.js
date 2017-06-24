@@ -2,8 +2,29 @@ var gp = {
   gguserphoto : function( p ) {
     if( p[0].html_attributions[0] ) {
       var link = $( p[0].html_attributions[0] ).attr( "href" );
-      return '<a target="_blank" href="' + link + '" target="gguserframe"><span class="glyphicon glyphicon-new-window ml10 f12"></span> ภาพบรรยากาศ</a>';
+      return '<a target="_blank" href="' + link + '"><u> ภาพบรรยากาศ <span class="glyphicon glyphicon-new-window ml5 f12"></span></u></a>';
     }
+  },
+  lv : function( lv ) {
+    var r = '';
+    switch( lv ) {
+      case "1" : case "2" :
+        r = 'lv1.png';
+      break;
+      case "3" : case "4" :
+        r = 'lv2.png';
+      break;
+      case "5" : case "6" :
+        r = 'lv3.png';
+      break;
+      case "7" : case "8" :
+        r = 'lv4.png';
+      break;
+      case "9" : case "10" :
+        r = 'lv5.png';
+      break;
+    }
+    return '<img src="/image/' + r + '">';
   },
   modal_detail : function( p, lo ) {
     var plat= p.geometry.location.lat();
@@ -39,11 +60,11 @@ var gp = {
               '<div class="media-body">' +
                 '<h4 class="media-heading mt10">' + p.name + '</h4>' +
                 '<p>' + p.vicinity + '</p>' +
-                '<span id="count_poohere">' +
+                '<span id="count_poohere" class="f16">' +
                   db[lo].poohere +
                 '</span>' +
-                ' <a href="#" id="bt_poohere"><img src="/image/launcher-icon-2x.png" height="20" class="vb"><span class="vb ml5">GoPoo</span></a> ' +
-                ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
+                ' <a href="#" id="bt_poohere"><span class="vb mr5">GoPoo(คลิก) </span><img src="/image/launcher-icon-2x.png" height="20" class="vb"></a> ' +
+                ( p.photos ? '<br>' + gp.gguserphoto( p.photos ) : "" ) +
               '</div>';
       return r;
     });
@@ -69,7 +90,9 @@ var gp = {
     $( "#bt_poohere" )
       .unbind( "click" )
       .bind( "click", function() {
-        gp.db_update_poohere( db[lo] );
+        if( confirm( "ยืนยันว่าได้ทำภารกิจในสถานที่แห่งนี้แล้วใช่หรือไม่? (คุณยังสามารถแสดงความคิดเห็นต่อบรรยากาศได้ในบริเวณพื้นที่แสดงความคิดเห็นด้านล่าง)") ) {
+          gp.db_update_poohere( db[lo] );
+        }
       });
 
   },
@@ -97,17 +120,19 @@ var gp = {
     });
   },
   db_update_poohere : function( d ) {
-    firebase.database().ref( d.id ).update({
-      poohere : ( parseInt( db[d.id].poohere ) + 1  )
-    }, function( e ) {
-      $( "#count_poohere" ).text( parseInt( db[d.id].poohere ) );
-    });
+
+      firebase.database().ref( d.id ).update({
+        poohere : ( parseInt( db[d.id].poohere ) + 1  )
+      }, function( e ) {
+        $( "#count_poohere" ).text( parseInt( db[d.id].poohere ) );
+      });
+
   },
   comment_load : function( db ) {
     $( "#modal-detail-body" ).html( function(){
       var r = '<div class="media" id="container_list_comment"  v-for="item in items">' +
                 '<div class="media-left">' +
-                  '<a href="#">{{ item.rating }}</a>' +
+                  '<a v-html="lv(item.rating)"></a>' +
                 '</div>' +
                 '<div class="media-body">' +
                   '<h4 class="media-heading mt10">{{ item.comment }}</h4>' +
@@ -118,8 +143,11 @@ var gp = {
     });
 
     var container_list_comment = new Vue({
-      el: '.modal-body',
+      el: '#modal-detail-body',
       data: {
+        lv : function( rating ) {
+          return gp.lv( rating );
+        },
         items: db
       }
     });

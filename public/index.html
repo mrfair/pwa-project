@@ -71,9 +71,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <!-- GoPoo script & style -->
-    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.6">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.52"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.52"></script>
+    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.11">
+    <script type="text/javascript" src="/gopoo.js?v=1.0.61"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.61"></script>
     <!-- END -->
   </head>
   <body>
@@ -137,8 +137,8 @@
               <div class="dropup">
                 <span class="glyphicon glyphicon-edit" id="bt_comment_last" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                 <ul class="dropdown-menu" aria-labelledby="bt_comment_last">
-                  <li class="alert alert-info">
-                    <a href="#" class="alert-link">ความคิดเห็นเมื่อเร็วๆนี้</a>
+                  <li class="comment_list_header">
+                    <h4>ความคิดเห็นตามจุด GoPoo</h4>
                   </li>
                   <li id="comment_list"></li>
                 </ul>
@@ -196,13 +196,18 @@
                    }
                  });
 
+                 /** Check place_cache to array **/
+                 var pc = [];
+                 $.each( place_cache, function( k, v ) {
+                   pc.push( k );
+                 });
+
                  var r = '';
                  for( var i in review ) {
                    var v = review[i];
-                   if( v ) {
-                    r += '<div class="comment_list_block">' + v.rating + ' <span class="ellipsis comment_list_text">' + v.review + '</span> <span class="glyphicon glyphicon-share-alt fr bt_comment_go" data-id="' + v.id +'"></span></div>';
+                   if( v && ( $.inArray( v.id, pc ) >= 0 ) ) {
+                    r += '<div class="comment_list_block"><span class="container_comment_list_level">' + gp.lv( v.rating ) + '</span> <span class="ellipsis comment_list_text">' + v.review + '</span> <span class="glyphicon glyphicon-search mt5 fr bt_comment_go" data-id="' + v.id +'"></span></div>';
                    }
-
                  }
                  return r;
                }) ;

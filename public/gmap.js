@@ -42,7 +42,7 @@ function placeshow( pos ) {
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
       location: pos,
-      radius: 1000,
+      radius: 4000,
       keyword: [v]
     }, callback);
   });
