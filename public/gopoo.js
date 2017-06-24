@@ -5,6 +5,74 @@ var gp = {
       return '<a target="_blank" href="' + link + '" target="gguserframe"><span class="glyphicon glyphicon-new-window ml10 f12"></span> ภาพบรรยากาศ</a>';
     }
   },
+  modal_detail : function( p, lo ) {
+    var plat= p.geometry.location.lat();
+    var plng = p.geometry.location.lng();
+
+    map.setCenter({ lat: plat, lng: plng });
+
+    $( "#mycomment" ).val( "" );
+    $( "#myModal" ).modal('show');
+
+    console.log( p );
+    map.setCenter( p.geometry.location );
+
+    /* Check db */
+
+
+    if( !db[lo] ) {
+      var data = {
+        id : lo,
+        lat : plat,
+        lng : plng,
+        name : p.name
+      };
+      gp.db_insert_place( data );
+    }
+
+    $("#modal-detail-title").html(function() {
+      var r = '<div class="media-left">' +
+                '<a href="#">' +
+                  '<img class="media-object" src="' + p.icon + '">' +
+                '</a>' +
+              '</div>' +
+              '<div class="media-body">' +
+                '<h4 class="media-heading mt10">' + p.name + '</h4>' +
+                '<p>' + p.vicinity + '</p>' +
+                '<span id="count_poohere">' +
+                  db[lo].poohere +
+                '</span>' +
+                ' <a href="#" id="bt_poohere"><img src="/image/launcher-icon-2x.png" height="20" class="vb"><span class="vb ml5">GoPoo</span></a> ' +
+                ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
+              '</div>';
+      return r;
+    });
+
+    /**List comment**/
+    if( db[lo] && db[lo].review ) {
+      gp.comment_load( db[lo].review );
+    } else {
+      $( "#modal-detail-body" ).html( "ยังไม่มีความคิดเห็น" );
+    }
+
+    $( "#bt_comment_add" )
+      .unbind( "click" )
+      .bind( "click", function() {
+        var data =  {
+          id : lo,
+          comment : $( "#mycomment" ).val(),
+          rating : $("#container_rateYo" ).attr( "data-rating" )
+        };
+        gp.db_insert_comment( data );
+      });
+
+    $( "#bt_poohere" )
+      .unbind( "click" )
+      .bind( "click", function() {
+        gp.db_update_poohere( db[lo] );
+      });
+
+  },
   lo_db_convert : function( a ) {
     return a.split(".").join("_");
   },
@@ -36,7 +104,7 @@ var gp = {
     });
   },
   comment_load : function( db ) {
-    $( ".modal-body" ).html( function(){
+    $( "#modal-detail-body" ).html( function(){
       var r = '<div class="media" id="container_list_comment"  v-for="item in items">' +
                 '<div class="media-left">' +
                   '<a href="#">{{ item.rating }}</a>' +

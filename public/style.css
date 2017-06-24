@@ -62,6 +62,25 @@ nav.navbar {
   margin-left: -5px;
 }
 
+.comment_list_text {
+  width: 90px;
+  display: inline-block;
+}
+
+.comment_list_block {
+  margin: 4px;
+  padding: 2px 4px;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .mt5 {
   margin-top: 5px;
 }
@@ -75,6 +94,10 @@ nav.navbar {
 
 .ml10 {
   margin-left: 10px;
+}
+
+.mb5 {
+  margin-bottom: 5px;
 }
 
 .vm {

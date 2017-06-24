@@ -7,14 +7,44 @@ function initMap() {
   infoWindow = new google.maps.InfoWindow;
 
   map.addListener( 'click', function( e ) {
-    alert( 1 );
     var pos = {
       lat : e.latLng.lat(),
       lng : e.latLng.lng()
     };
+
+    var contentString =
+                '<table style="font-size:10px; line-height:22px; font-weight:bold; text-align:center;" class="ml10" cellpadding="0" cellspacing="0" border="0"><tr valign="bottom"><td><img src="/image/addgopoo.png" id="bt_addmodal_show"></td><td rowspan="2" width="20"></td><td><img src="/image/findgopoo.png" height="64" id="bt_place_search"></td></tr><tr><td><span style="margin-left:-10px;">Add GoPoo</span></td><td>Find GoPoo</td></tr></table>';
     infoWindow.setPosition(pos);
-    infoWindow.setContent( 'Hellow world' );
+    infoWindow.setContent( contentString );
     infoWindow.open(map);
+    map.setCenter(pos);
+
+    $( "#bt_place_search" )
+      .unbind( "click" )
+      .bind( "click", function() {
+        placeshow( pos );
+        infoWindow.close();
+      });
+
+    $( "#bt_addmodal_show" )
+      .unbind( "click" )
+      .bind( "click", function() {
+        $( '#addModal' ).modal('show');
+        infoWindow.close();
+      });
+  });
+}
+
+function placeshow( pos ) {
+  /**ค้นหาสถานที่ **/
+  var keyword = ['gas', 'worship', 'market'];
+  $.each( keyword, function( k, v ) {
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch({
+      location: pos,
+      radius: 1000,
+      keyword: [v]
+    }, callback);
   });
 }
 
@@ -30,17 +60,7 @@ function locationNow() {
 
       mymarker( pos );
       map.setCenter(pos);
-
-      /**ค้นหาสถานที่ **/
-      var keyword = ['gas', 'worship', 'mall'];
-      $.each( keyword, function( k, v ) {
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-          location: pos,
-          radius: 3000,
-          keyword: [v]
-        }, callback);
-      });
+      placeshow( pos );
 
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
@@ -72,89 +92,36 @@ function mymarker( position ) {
 function callback(results, status) {
 
   if (status === google.maps.places.PlacesServiceStatus.OK) {
-    console.log( results );
-    for (var i = 0; i < results.length; i++) {
-      createMarker(results[i]);
+    if( results.length > 0 ) {
+      for (var i = 0; i < results.length; i++) {
+        createMarker(results[i]);
+      }
+    } else {
+      alert( "ซวยล่ะ ไม่พบจุด GoPoo แถวๆนี้!" );
     }
   }
 
 }
-
+var place_cache = {};
 function createMarker(place) {
-  var placeLoc = place.geometry.location;
+  var p = place;
+  var lo = gp.lo_db_convert( 'p' + p.geometry.location.lat() + p.geometry.location.lng() ) ;
+
+  var placeLoc = p.geometry.location;
   var marker = new google.maps.Marker({
+    id: lo,
     map: map,
-    position: place.geometry.location,
+    position: p.geometry.location,
     icon: "/image/mapicon22.png",
   });
 
   google.maps.event.addListener( marker, 'click', function() {
-      console.log( db );
-      $( "#mycomment" ).val( "" );
-      $( "#myModal" ).modal('show');
-      var p = place;
-      console.log( p );
-      map.setCenter( p.geometry.location );
-
-      /* Check db */
-      var lo = gp.lo_db_convert( 'p' + p.geometry.location.lat() + p.geometry.location.lng() ) ;
-
-      if( !db[lo] ) {
-        console.log( "insert db" );
-        var data = {
-          id : lo,
-          lat : p.geometry.location.lat(),
-          lng : p.geometry.location.lng(),
-          name : p.name
-        };
-        gp.db_insert_place( data );
-      }
-
-      $(".modal-title").html(function() {
-        var r = '<div class="media-left">' +
-                  '<a href="#">' +
-                    '<img class="media-object" src="' + p.icon + '">' +
-                  '</a>' +
-                '</div>' +
-                '<div class="media-body">' +
-                  '<h4 class="media-heading mt10">' + p.name + '</h4>' +
-                  '<p>' + p.vicinity + '</p>' +
-                  '<span id="count_poohere">' +
-                    db[lo].poohere +
-                  '</span>' +
-                  ' <a href="#" id="bt_poohere"><img src="/image/launcher-icon-2x.png" height="20" class="vb"><span class="vb ml5">GoPoo</span></a> ' +
-                  ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
-                '</div>';
-        return r;
-      });
-
-      /**List comment**/
-      if( db[lo] && db[lo].review ) {
-        gp.comment_load( db[lo].review );
-      } else {
-        $( ".modal-body" ).html( "ยังไม่มีความคิดเห็น" );
-      }
-
-      $( "#bt_comment_add" )
-        .unbind( "click" )
-        .bind( "click", function() {
-          var data =  {
-            id : lo,
-            comment : $( "#mycomment" ).val(),
-            rating : $("#container_rateYo" ).attr( "data-rating" )
-          };
-          gp.db_insert_comment( data );
-        });
-
-      $( "#bt_poohere" )
-        .unbind( "click" )
-        .bind( "click", function() {
-          gp.db_update_poohere( db[lo] );
-        });
-
+    gp.modal_detail( p, lo );
     /*
     infowindow.setContent(place.name);
     infowindow.open(map, this);
     */
   });
+
+  place_cache[lo] = p;
 }

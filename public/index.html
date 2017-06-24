@@ -71,9 +71,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <!-- GoPoo script & style -->
-    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.1">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.44"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.44"></script>
+    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.6">
+    <script type="text/javascript" src="/gopoo.js?v=1.0.52"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.52"></script>
     <!-- END -->
   </head>
   <body>
@@ -83,9 +83,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <div class="modal-title media">GoPoo</div>
+            <div class="modal-title media" id="modal-detail-title">GoPoo</div>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" id="modal-detail-body">
           </div>
           <div class="modal-footer">
             <div class="tl">
@@ -103,6 +103,32 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title media">
+              <h4>คุณค้นพบจุด GoPoo อย่างนั้นหรือ?</h4>
+              <p>
+                สถานที่แห่งนี้อาจช่วยเพื่อนมนุษย์ให้หลุดพ้นจากความทุกข์ทรมานในยามฉุกเฉินได้ คุณเป็นผู้ค้นพบคนแรก โปรดตั้งชื่อให้กับสถานที่แห่งนี้
+              </p>
+            </div>
+          </div>
+          <div class="modal-body">
+            <p>
+              ชื่อสถานที่ <input type="text" id="namegopoo" maxlength="40" placeholder="ชื่อสถานที่ Gopoo" class="form-control" />
+            </p>
+            <p>
+              คำบรรยายสถานที่ <textarea id="detailgopoo" class="form-control" rows="3" maxlength="150" placeholder="คำบรรยายสถานที่"></textarea>
+            </p>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning fr mt5" id="bt_goopoo_add">เพิ่มจุด GoPoo</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <nav class="navbar navbar-default navbar-fixed-bottom">
       <div class="container-fluid">
           <div class="row">
@@ -111,7 +137,10 @@
               <div class="dropup">
                 <span class="glyphicon glyphicon-edit" id="bt_comment_last" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                 <ul class="dropdown-menu" aria-labelledby="bt_comment_last">
-                  <li id="comment_list"><a href="#">Action</a></li>
+                  <li class="alert alert-info">
+                    <a href="#" class="alert-link">ความคิดเห็นเมื่อเร็วๆนี้</a>
+                  </li>
+                  <li id="comment_list"></li>
                 </ul>
               </div>
             </div>
@@ -152,13 +181,10 @@
 
              $("#bt_comment_last").click( function() {
                $("#comment_list").html(function() {
-
-                 console.log( db );
                  var review = {};
                  $.each( db, function( k, v ) {
                    if( v.review ) {
                      $.each( v.review, function( k1, v1 ) {
-
                        review[k1] = {
                          id: v.id,
                          lat: v.lat,
@@ -167,13 +193,27 @@
                          rating: v1.rating
                        };
                      });
-
                    }
                  });
 
-                 console.log( review );
-                 return 'list';
+                 var r = '';
+                 for( var i in review ) {
+                   var v = review[i];
+                   if( v ) {
+                    r += '<div class="comment_list_block">' + v.rating + ' <span class="ellipsis comment_list_text">' + v.review + '</span> <span class="glyphicon glyphicon-share-alt fr bt_comment_go" data-id="' + v.id +'"></span></div>';
+                   }
+
+                 }
+                 return r;
                }) ;
+
+               $( ".bt_comment_go" ).each( function() {
+                 $( this ).unbind( "click" ).bind( "click", function() {
+                   console.log( place_cache );
+                   var id = $( this ).attr("data-id");
+                   gp.modal_detail( place_cache[id], id );
+                 });
+               })
              });
           }, function (error) {
              console.log("Error: " + error.code);
