@@ -2,7 +2,7 @@ var gp = {
   gguserphoto : function( p ) {
     if( p[0].html_attributions[0] ) {
       var link = $( p[0].html_attributions[0] ).attr( "href" );
-      return '<a target="_blank" href="' + link + '" target="gguserframe"><span class="glyphicon glyphicon-new-window"></span> ภาพบรรยากาศ</a>';
+      return '<a target="_blank" href="' + link + '" target="gguserframe"><span class="glyphicon glyphicon-new-window ml10 f12"></span> ภาพบรรยากาศ</a>';
     }
   },
   lo_db_convert : function( a ) {

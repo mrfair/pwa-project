@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GoPoo</title>
+    <link rel="icon" href="/image/launcher-icon-2x.png" type="image/png" />
 
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -70,9 +71,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <!-- GoPoo script & style -->
-    <link rel="stylesheet" type="text/css" href="/style.css">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.31"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.31"></script>
+    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.1">
+    <script type="text/javascript" src="/gopoo.js?v=1.0.37"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.37"></script>
     <!-- END -->
   </head>
   <body>
@@ -111,8 +112,8 @@
             <div class="col-xs-4 tc">
               <a href="#" onclick="locationNow()" id="bt_locatin_now" class="glyphicon  glyphicon-screenshot"></a>
             </div>
-            <div class="col-xs-4 tr">
-
+            <div class="col-xs-4">
+              <img src="image/logorb.png" class="logorb" />
             </div>
         </div>
       </div>
@@ -154,7 +155,7 @@
 
       if('serviceWorker' in navigator) {
         navigator.serviceWorker
-                 .register('/sw.js?v=1.0.12')
+                 .register('/sw.js?v=1.0.13')
                  .then(function() { console.log("Service Worker Registered"); });
       }
 

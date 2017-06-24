@@ -17,9 +17,7 @@ function locationNow() {
         lng: position.coords.longitude
       };
 
-      infoWindow.setPosition(pos);
-      infoWindow.setContent('Location found.');
-      infoWindow.open(map);
+      mymarker( pos );
       map.setCenter(pos);
 
       /**ค้นหาสถานที่ **/
@@ -52,6 +50,14 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
+function mymarker( position ) {
+  var mymarker = new google.maps.Marker({
+    map: map,
+    position: position,
+    icon: "/image/myicon.png"
+  });
+}
+
 function callback(results, status) {
 
   if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -67,7 +73,8 @@ function createMarker(place) {
   var placeLoc = place.geometry.location;
   var marker = new google.maps.Marker({
     map: map,
-    position: place.geometry.location
+    position: place.geometry.location,
+    icon: "/image/mapicon2.png",
   });
 
   google.maps.event.addListener( marker, 'click', function() {
@@ -104,7 +111,7 @@ function createMarker(place) {
                   '<span id="count_poohere">' +
                     db[lo].poohere +
                   '</span>' +
-                  ' <a href="#" id="bt_poohere">GoPoo</a> ' +
+                  ' <a href="#" id="bt_poohere"><img src="/image/launcher-icon-2x.png" height="20" class="vb"><span class="vb ml5">GoPoo</span></a> ' +
                   ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
                 '</div>';
         return r;

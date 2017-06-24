@@ -26,17 +26,28 @@ a:focus {
 #bt_locatin_now {
   font-size: 60px;
   position: absolute;
-  margin-left: -40px;
-  margin-top: -30px;
-  background-color: #b7732a;
+  margin-left: -45px;
+  margin-top: -48px;
+  background-color: #FFF;
   padding: 10px;
   border-radius: 50%;
-  color: #FFF;
+  color: #563217;
+  border: 5px solid #563217;
 }
 
 nav.navbar {
   background: none;
   background-color: #b7732a;
+  border-top: 5px solid #563217;
+  height: 50px;
+}
+
+.logorb {
+  max-width: 100%;
+  max-height: 29px;
+  bottom: -35px;
+  position: absolute;
+  right: 5px;
 }
 
 #rateYo {
@@ -45,7 +56,10 @@ nav.navbar {
 
 #bt_comment_last {
   margin-top: 10px;
-  font-size: 30px;
+  font-size: 1.4em;
+  color: #FFFFFF;
+  font-weight: lighter;
+  margin-left: -5px;
 }
 
 .mt5 {
@@ -54,6 +68,20 @@ nav.navbar {
 
 .mt10 {
   margin-top: 10px;
+}
+.ml5 {
+  margin-left: 5px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.vm {
+  vertical-align: middle;
+}
+.vb {
+  vertical-align: bottom;
 }
 
 .fr {
@@ -70,4 +98,8 @@ nav.navbar {
 
 .tc {
   text-align: center;
+}
+
+.f12 {
+  font-size: 12px;
 }
