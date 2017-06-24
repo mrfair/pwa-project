@@ -5,8 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GoPoo</title>
 
-    <script type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script type="text/javascript" src="/gopoo.js"></script>
+    <!-- jQuery is required -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/4.1.3/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
@@ -45,10 +61,37 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <link rel="stylesheet" type="text/css" href="/style.css">
-
+    <script type="text/javascript" src="/gopoo.js?v=1.0.0"></script>
   </head>
   <body>
     <div id="map"></div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-title media">GoPoo</div>
+          </div>
+          <div class="modal-body">
+            <p>One fine body&hellip;</p>
+          </div>
+          <div class="modal-footer">
+            <div class="tl">
+              คิดเห็นอย่างไร?
+            </div>
+            <textarea class="form-control" placeholder="แสดงความคิดเห็น"></textarea>
+            <div class="mt10">
+              <button type="button" class="btn btn-primary fr mt5">แสดงความเห็น</button>
+              <div class="tl">
+                ให้คะแนน
+                <span id="rateYo"></span>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <script>
       // Note: This example requires that you consent to location sharing when
       // prompted by your browser. If you see the error "The Geolocation service
@@ -62,6 +105,16 @@
         });
         infoWindow = new google.maps.InfoWindow;
 
+        /**ค้นหาสถานที่ **/
+        var pyrmont = { lat: 13.9756666, lng: 100.7929154 };
+
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location: pyrmont,
+          radius: 5000,
+          //keyword: ['store','gas','restaurant']
+        }, callback);
+
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
@@ -71,20 +124,13 @@
               lng: position.coords.longitude
             };
 
+
             infoWindow.setPosition(pos);
             infoWindow.setContent('Location found.');
             infoWindow.open(map);
             map.setCenter(pos);
 
-            /**ค้นหาสถานที่ **/
-            var pyrmont = {lat: -33.867, lng: 151.195};
 
-            var service = new google.maps.places.PlacesService(map);
-            service.nearbySearch({
-              location: pyrmont,
-              radius: 500,
-              type: ['store']
-            }, callback);
 
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -93,8 +139,6 @@
           // Browser doesn't support Geolocation
           handleLocationError(false, infoWindow, map.getCenter());
         }
-
-
       }
 
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -104,9 +148,53 @@
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
       }
+
+      function callback(results, status) {
+
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }
+
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            $('#myModal').modal('show');
+            console.log( place );
+            map.setCenter(place.geometry.location);
+
+            var p = place;
+            $(".modal-title").html(function() {
+              var r = '<div class="media-left">' +
+                        '<a href="#">' +
+                          '<img class="media-object" src="' + p.icon + '">' +
+                        '</a>' +
+                      '</div>' +
+                      '<div class="media-body">' +
+                        '<h4 class="media-heading mt10">' + p.name + '</h4>' +
+                        '<p>' + p.vicinity + '</p>' +
+                        ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
+                      '</div>';
+              return r;
+            });
+
+          /*
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+          */
+        });
+      }
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqGWXvCatTzwwvOFBfEQDTNybWL-CpNI&hl=th&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqGWXvCatTzwwvOFBfEQDTNybWL-CpNI&libraries=places&hl=th&callback=initMap">
     </script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {

@@ -10,3 +10,23 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.mt5 {
+  margin-top: 5px;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.fr {
+  float: right;
+}
+
+#rateYo {
+  margin-left: -5px;
+}
+
+.tl {
+  text-align: left;
+}
