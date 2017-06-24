@@ -1,14 +1,17 @@
-importScripts('/cache-polyfill.js');
+//importScripts('/cache-polyfill.js');
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open('demo-cache')
     .then(function(cache) {
+      /*
       return cache.addAll([
           '/',
           '/style.css',
-          '/gopoo.js'
+          '/gopoo.js',
+          '/offline.html'
         ]);
+      */
     })
     .then(function() {
       console.log('WORKER: install completed');

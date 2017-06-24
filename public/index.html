@@ -8,6 +8,12 @@
     <!-- jQuery is required -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+    <!-- Moment Local.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/th.js"></script>
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -61,7 +67,8 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <link rel="stylesheet" type="text/css" href="/style.css">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.0"></script>
+    <script type="text/javascript" src="/gopoo.js?v=1.0.7"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.7"></script>
   </head>
   <body>
     <div id="map"></div>
@@ -79,10 +86,10 @@
             <div class="tl">
               คิดเห็นอย่างไร?
             </div>
-            <textarea class="form-control" placeholder="แสดงความคิดเห็น"></textarea>
+            <textarea class="form-control" id="mycomment" placeholder="แสดงความคิดเห็น"></textarea>
             <div class="mt10">
               <button type="button" class="btn btn-primary fr mt5">แสดงความเห็น</button>
-              <div class="tl">
+              <div class="tl" id="container_rateYo" data-rating="2.5">
                 ให้คะแนน
                 <span id="rateYo"></span>
               </div>
@@ -91,112 +98,18 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-    <script>
-      // Note: This example requires that you consent to location sharing when
-      // prompted by your browser. If you see the error "The Geolocation service
-      // failed.", it means you probably did not give permission for the browser to
-      // locate you.
-      var map, infoWindow;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: { lat: 13.9756666, lng: 100.7929154 },
-          zoom: 15
-        });
-        infoWindow = new google.maps.InfoWindow;
-
-        /**ค้นหาสถานที่ **/
-        var pyrmont = { lat: 13.9756666, lng: 100.7929154 };
-
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-          location: pyrmont,
-          radius: 5000,
-          //keyword: ['store','gas','restaurant']
-        }, callback);
-
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            /**สถานที่ปัจุุบันและปัหมุด**/
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
-            map.setCenter(pos);
-
-
-
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-      }
-
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-      }
-
-      function callback(results, status) {
-
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
-        }
-
-      }
-
-      function createMarker(place) {
-        var placeLoc = place.geometry.location;
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-            $('#myModal').modal('show');
-            console.log( place );
-            map.setCenter(place.geometry.location);
-
-            var p = place;
-            $(".modal-title").html(function() {
-              var r = '<div class="media-left">' +
-                        '<a href="#">' +
-                          '<img class="media-object" src="' + p.icon + '">' +
-                        '</a>' +
-                      '</div>' +
-                      '<div class="media-body">' +
-                        '<h4 class="media-heading mt10">' + p.name + '</h4>' +
-                        '<p>' + p.vicinity + '</p>' +
-                        ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
-                      '</div>';
-              return r;
-            });
-
-          /*
-          infowindow.setContent(place.name);
-          infowindow.open(map, this);
-          */
-        });
-      }
-    </script>
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+      <div class="container">
+        <div class="navbar-header">
+          <span id="btLocationNow" onclick="locationNow()" class="glyphicon glyphicon-map-marker"></span>
+        </div>
+      </div>
+    </nav>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqGWXvCatTzwwvOFBfEQDTNybWL-CpNI&libraries=places&hl=th&callback=initMap">
     </script>
     <script>
+      var db;
       document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
@@ -212,6 +125,15 @@
           let app = firebase.app();
           let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
           console.log( `Firebase SDK loaded with ${features.join(', ')}` );
+
+          var ref = firebase.database().ref();
+
+          ref.on("value", function( snapshot ) {
+             db = snapshot.val();
+          }, function (error) {
+             console.log("Error: " + error.code);
+          });
+
         } catch (e) {
           console.error(e);
           console.log( 'Error loading the Firebase SDK, check the console.' );
@@ -220,7 +142,7 @@
 
       if('serviceWorker' in navigator) {
         navigator.serviceWorker
-                 .register('/sw.js')
+                 .register('/sw.js?v=1.0.1')
                  .then(function() { console.log("Service Worker Registered"); });
       }
 
