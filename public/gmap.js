@@ -23,14 +23,15 @@ function locationNow() {
       map.setCenter(pos);
 
       /**ค้นหาสถานที่ **/
-      var pyrmont = pos;
-
-      var service = new google.maps.places.PlacesService(map);
-      service.nearbySearch({
-        location: pyrmont,
-        radius: 5000,
-        keyword: ['store','gas','restaurant']
-      }, callback);
+      var keyword = ['gas', 'worship','store'];
+      $.each( keyword, function( k, v ) {
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location: pos,
+          radius: 3000,
+          keyword: [v]
+        }, callback);
+      });
 
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
@@ -54,6 +55,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 function callback(results, status) {
 
   if (status === google.maps.places.PlacesServiceStatus.OK) {
+    console.log( results );
     for (var i = 0; i < results.length; i++) {
       createMarker(results[i]);
     }
@@ -71,14 +73,16 @@ function createMarker(place) {
   google.maps.event.addListener( marker, 'click', function() {
       console.log( db );
       $( "#mycomment" ).val( "" );
-      $('#myModal').modal('show');
+      $( "#myModal" ).modal('show');
       var p = place;
+      console.log( p );
       map.setCenter( p.geometry.location );
 
       /* Check db */
       var lo = gp.lo_db_convert( 'p' + p.geometry.location.lat() + p.geometry.location.lng() ) ;
 
-      if( !db.lo ) {
+      if( !db[lo] ) {
+        console.log( "insert db" );
         var data = {
           id : lo,
           lat : p.geometry.location.lat(),
@@ -87,7 +91,6 @@ function createMarker(place) {
         };
         gp.db_insert_place( data );
       }
-
 
       $(".modal-title").html(function() {
         var r = '<div class="media-left">' +
@@ -98,10 +101,38 @@ function createMarker(place) {
                 '<div class="media-body">' +
                   '<h4 class="media-heading mt10">' + p.name + '</h4>' +
                   '<p>' + p.vicinity + '</p>' +
+                  '<span id="count_poohere">' +
+                    db[lo].poohere +
+                  '</span>' +
+                  ' <a href="#" id="bt_poohere">GoPoo</a> ' +
                   ( p.photos ? gp.gguserphoto( p.photos ) : "" ) +
                 '</div>';
         return r;
       });
+
+      /**List comment**/
+      if( db[lo] && db[lo].review ) {
+        gp.comment_load( db[lo].review );
+      } else {
+        $( ".modal-body" ).html( "ยังไม่มีความคิดเห็น" );
+      }
+
+      $( "#bt_comment_add" )
+        .unbind( "click" )
+        .bind( "click", function() {
+          var data =  {
+            id : lo,
+            comment : $( "#mycomment" ).val(),
+            rating : $("#container_rateYo" ).attr( "data-rating" )
+          };
+          gp.db_insert_comment( data );
+        });
+
+      $( "#bt_poohere" )
+        .unbind( "click" )
+        .bind( "click", function() {
+          gp.db_update_poohere( db[lo] );
+        });
 
     /*
     infowindow.setContent(place.name);

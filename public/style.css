@@ -6,9 +6,46 @@ body {
   background-color: #b7732a;
 }
 
+html {
+  padding-bottom: 50px;
+}
+
+a,
+a:hover,
+a:visited,
+a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
 #map {
   height: 100%;
   width: 100%;
+}
+
+#bt_locatin_now {
+  font-size: 60px;
+  position: absolute;
+  margin-left: -40px;
+  margin-top: -30px;
+  background-color: #b7732a;
+  padding: 10px;
+  border-radius: 50%;
+  color: #FFF;
+}
+
+nav.navbar {
+  background: none;
+  background-color: #b7732a;
+}
+
+#rateYo {
+  margin-left: -5px;
+}
+
+#bt_comment_last {
+  margin-top: 10px;
+  font-size: 30px;
 }
 
 .mt5 {
@@ -23,10 +60,14 @@ body {
   float: right;
 }
 
-#rateYo {
-  margin-left: -5px;
-}
-
 .tl {
   text-align: left;
+}
+
+.tr {
+  text-align: right;
+}
+
+.tc {
+  text-align: center;
 }

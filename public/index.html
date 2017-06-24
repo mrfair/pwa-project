@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GoPoo</title>
 
-    <!-- jQuery is required -->
+    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Vue -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
 
     <!-- Moment.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -66,9 +69,11 @@
     <link rel="apple-touch-icon" sizes="128x128" href="image/launcher-icon-128.png">
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
+    <!-- GoPoo script & style -->
     <link rel="stylesheet" type="text/css" href="/style.css">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.7"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.7"></script>
+    <script type="text/javascript" src="/gopoo.js?v=1.0.31"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.31"></script>
+    <!-- END -->
   </head>
   <body>
     <div id="map"></div>
@@ -80,16 +85,15 @@
             <div class="modal-title media">GoPoo</div>
           </div>
           <div class="modal-body">
-            <p>One fine body&hellip;</p>
           </div>
           <div class="modal-footer">
             <div class="tl">
-              คิดเห็นอย่างไร?
+              คุณคิดเห็นอย่างไร?
             </div>
-            <textarea class="form-control" id="mycomment" placeholder="แสดงความคิดเห็น"></textarea>
+            <textarea class="form-control mt5" id="mycomment" placeholder="แสดงความคิดเห็น"></textarea>
             <div class="mt10">
-              <button type="button" class="btn btn-primary fr mt5">แสดงความเห็น</button>
-              <div class="tl" id="container_rateYo" data-rating="2.5">
+              <button type="button" class="btn btn-primary fr mt5" id="bt_comment_add">แสดงความเห็น</button>
+              <div class="tl" id="container_rateYo" data-rating="5">
                 ให้คะแนน
                 <span id="rateYo"></span>
               </div>
@@ -99,9 +103,17 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <nav class="navbar navbar-default navbar-fixed-bottom">
-      <div class="container">
-        <div class="navbar-header">
-          <span id="btLocationNow" onclick="locationNow()" class="glyphicon glyphicon-map-marker"></span>
+      <div class="container-fluid">
+          <div class="row">
+            <div class="col-xs-4">
+              <span class="glyphicon glyphicon-edit" id="bt_comment_last"></span>
+            </div>
+            <div class="col-xs-4 tc">
+              <a href="#" onclick="locationNow()" id="bt_locatin_now" class="glyphicon  glyphicon-screenshot"></a>
+            </div>
+            <div class="col-xs-4 tr">
+
+            </div>
         </div>
       </div>
     </nav>
@@ -142,7 +154,7 @@
 
       if('serviceWorker' in navigator) {
         navigator.serviceWorker
-                 .register('/sw.js?v=1.0.1')
+                 .register('/sw.js?v=1.0.12')
                  .then(function() { console.log("Service Worker Registered"); });
       }
 
