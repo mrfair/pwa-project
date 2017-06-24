@@ -72,8 +72,8 @@
 
     <!-- GoPoo script & style -->
     <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.1">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.37"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.37"></script>
+    <script type="text/javascript" src="/gopoo.js?v=1.0.44"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.44"></script>
     <!-- END -->
   </head>
   <body>
@@ -107,7 +107,13 @@
       <div class="container-fluid">
           <div class="row">
             <div class="col-xs-4">
-              <span class="glyphicon glyphicon-edit" id="bt_comment_last"></span>
+
+              <div class="dropup">
+                <span class="glyphicon glyphicon-edit" id="bt_comment_last" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                <ul class="dropdown-menu" aria-labelledby="bt_comment_last">
+                  <li id="comment_list"><a href="#">Action</a></li>
+                </ul>
+              </div>
             </div>
             <div class="col-xs-4 tc">
               <a href="#" onclick="locationNow()" id="bt_locatin_now" class="glyphicon  glyphicon-screenshot"></a>
@@ -143,6 +149,32 @@
 
           ref.on("value", function( snapshot ) {
              db = snapshot.val();
+
+             $("#bt_comment_last").click( function() {
+               $("#comment_list").html(function() {
+
+                 console.log( db );
+                 var review = {};
+                 $.each( db, function( k, v ) {
+                   if( v.review ) {
+                     $.each( v.review, function( k1, v1 ) {
+
+                       review[k1] = {
+                         id: v.id,
+                         lat: v.lat,
+                         lng: v.lng,
+                         review : v1.comment,
+                         rating: v1.rating
+                       };
+                     });
+
+                   }
+                 });
+
+                 console.log( review );
+                 return 'list';
+               }) ;
+             });
           }, function (error) {
              console.log("Error: " + error.code);
           });

@@ -5,6 +5,17 @@ function initMap() {
     zoom: 15
   });
   infoWindow = new google.maps.InfoWindow;
+
+  map.addListener( 'click', function( e ) {
+    alert( 1 );
+    var pos = {
+      lat : e.latLng.lat(),
+      lng : e.latLng.lng()
+    };
+    infoWindow.setPosition(pos);
+    infoWindow.setContent( 'Hellow world' );
+    infoWindow.open(map);
+  });
 }
 
 function locationNow() {
@@ -21,7 +32,7 @@ function locationNow() {
       map.setCenter(pos);
 
       /**ค้นหาสถานที่ **/
-      var keyword = ['gas', 'worship','store'];
+      var keyword = ['gas', 'worship', 'mall'];
       $.each( keyword, function( k, v ) {
         var service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
@@ -74,7 +85,7 @@ function createMarker(place) {
   var marker = new google.maps.Marker({
     map: map,
     position: place.geometry.location,
-    icon: "/image/mapicon2.png",
+    icon: "/image/mapicon22.png",
   });
 
   google.maps.event.addListener( marker, 'click', function() {

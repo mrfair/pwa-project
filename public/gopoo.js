@@ -19,7 +19,7 @@ var gp = {
     });
   },
   db_insert_comment : function( d ) {
-    firebase.database().ref( d.id + '/review/' + moment().format('Y-m-d h:mm:ss') ).set({
+    firebase.database().ref( d.id + '/review/' + moment().format('YYYY-MM-DD h:mm:ss') ).set({
       comment : d.comment,
       rating : d.rating,
       datetime : moment().format('MMMM Do YYYY, h:mm:ss a')
@@ -61,7 +61,6 @@ var gp = {
 $( function(){
   console.log( "สวัสดีครับ ยินดีต้องรับสู่ GoPoo" );
 
-
   $("#rateYo").rateYo({
     onChange: function (rating, rateYoInstance) {
       $( "#container_rateYo" ).attr( "data-rating", rating );
@@ -79,3 +78,24 @@ $( function(){
 
   locationNow();
 });
+
+var sortObjectByKey = function(obj) {
+  var keys = [];
+  var sorted_obj = {};
+
+  for(var key in obj){
+      if(obj.hasOwnProperty(key)){
+          keys.push(key);
+      }
+  }
+
+  // sort keys
+  keys.sort();
+
+  // create new array based on Sorted Keys
+  jQuery.each(keys, function(i, key){
+      sorted_obj[key] = obj[key];
+  });
+
+  return sorted_obj;
+}
