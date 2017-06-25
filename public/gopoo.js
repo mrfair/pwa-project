@@ -200,7 +200,7 @@ $( function(){
   $.each( setting_item, function( k, v ) {
     $( "#list_setting" ).prepend(
       $( "<li>" )
-        .html( '<a href="#"><label><input type="checkbox" name="check_setting" value="' + v.value + '"> ' + v.label + '</label></a>' )
+        .html( '<label><input type="checkbox" name="check_setting" value="' + v.value + '"> ' + v.label + '</label>' )
     );
   });
 
@@ -211,6 +211,11 @@ $( function(){
     });
   } else {
     $.cookie( "listsetting", "pestrol station;worship" );
+    keyword = ["pestrol station","worship"];
+    $.each( keyword , function( k, v ) {
+      var input_name = 'input[name=check_setting][value="' + v + '"]';
+      $( input_name ).prop( "checked", true );
+    });
   }
 
   $( "input[name=check_setting]" ).each( function() {
@@ -224,14 +229,18 @@ $( function(){
     });
   });
 
-  $('#list_setting').click(function(e) {
-      e.stopPropagation();
+  $('#bt_setting_search').click(function(e) {
+      $("#settingModal").modal( "show" );
   });
 
 
 
   /** Add Place **/
   $( "#bt_goopoo_add" ).click( function() {
+    if( $("#namegopoo").val().trim() == "" || $("#detailgopoo").val().trim() == "" ) {
+      alert( "บรรยายบรรยากาศจุด GoPoo สักหน่อยนะ" );
+      return false;
+    }
     var  pos_ = {
       lat : $( this ).attr( "data-lat" ),
       lng : $( this ).attr( "data-lng" )
@@ -281,12 +290,6 @@ var sortObjectByKey = function(obj) {
 
   return sorted_obj;
 };
-
-
-
-alert(calcCrow(59.3293371,13.4877472,59.3225525,13.4619422).toFixed(1));
-
-
 
 //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
 function calcCrow(lat1, lon1, lat2, lon2)

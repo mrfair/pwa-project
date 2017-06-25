@@ -162,3 +162,7 @@ nav.navbar {
 .f16 {
   font-size: 16px;
 }
+
+.lsn {
+  list-style: none !important;
+}

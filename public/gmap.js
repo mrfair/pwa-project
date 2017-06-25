@@ -23,6 +23,11 @@ function initMap() {
       .unbind( "click" )
       .bind( "click", function() {
         placeshow( pos );
+
+        latnow = pos.lat;
+        lngnow = pos.lng;
+        place_human( db );
+
         infoWindow.close();
       });
 
@@ -39,7 +44,6 @@ function initMap() {
   });
 }
 
-var db_check = "0";
 function placeshow( pos ) {
   /**ค้นหาสถานที่ **/
   var keyword = [];
@@ -57,7 +61,20 @@ function placeshow( pos ) {
       keyword: [v]
     }, callback);
   });
+}
 
+function place_human( p ) {
+  $.each( p, function( k, v ) {
+    if( v.type == 1 ) {
+      var lat1 = parseFloat( latnow );
+      var lng1 = parseFloat( lngnow );
+      var lat2 = parseFloat( v.lat );
+      var lng2 = parseFloat( v.lng );
+      if( calcCrow( lat1, lng1, lat2, lng2 ) < 4 ) {
+       createMarker( v );
+      }
+    }
+  });
 }
 
 function locationNow() {
@@ -97,8 +114,9 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   map.setCenter(pos);
 }
 
+var mymarker;
 function mymarker( position ) {
-  var mymarker = new google.maps.Marker({
+  mymarker = new google.maps.Marker({
     map: map,
     position: position,
     icon: "/image/myicon.png"
