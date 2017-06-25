@@ -23,6 +23,10 @@ a:focus {
   width: 100%;
 }
 
+#grass {
+  margin-top: 20px;
+}
+
 #bt_locatin_now {
   font-size: 60px;
   position: absolute;
@@ -33,6 +37,12 @@ a:focus {
   border-radius: 50%;
   color: #563217;
   border: 5px solid #563217;
+}
+
+.bt_locatin_now_active {
+  color: #b7732a !important;
+  border: 5px solid #b7732a !important;
+  background-color: #563217 !important;
 }
 
 nav.navbar {
@@ -103,6 +113,11 @@ nav.navbar {
 .modal-body {
   max-height: 400px;
   overflow-y: auto;
+}
+
+.modal-content {
+  border-radius: 0;
+  border-top: 5px solid #563217;
 }
 
 .mt5 {

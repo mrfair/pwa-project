@@ -94,6 +94,8 @@ function locationNow() {
       lngnow = pos.lng;
       latnow = pos.lat;
 
+      $("#bt_locatin_now").removeClass( "bt_locatin_now_active" );
+
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
     });
@@ -112,15 +114,21 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         'Error: Your browser doesn\'t support geolocation.');
   infoWindow.open(map);
   map.setCenter(pos);
+  $("#bt_locatin_now").removeClass( "bt_locatin_now_active" );
 }
 
-var mymarker;
+var nowmarker = "1";
 function mymarker( position ) {
-  mymarker = new google.maps.Marker({
-    map: map,
-    position: position,
-    icon: "/image/myicon.png"
-  });
+  if( nowmarker == "1" ) {
+    nowmarker = new google.maps.Marker({
+      map: map,
+      position: position,
+      icon: "/image/myicon.png"
+    });
+  } else {
+    nowmarker.setPosition( position );
+  }
+
 }
 
 function callback(results, status) {

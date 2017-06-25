@@ -170,6 +170,23 @@ $( function(){
   console.log( "สวัสดีครับ ยินดีต้องรับสู่ GoPoo" );
   locationNow();
 
+  $("#bt_locatin_now").click( function() {
+    $( this ).addClass( "bt_locatin_now_active" );
+    locationNow();
+  });
+
+  $( "#welcome_text_caption" ).text(function() {
+
+    var txt = ["คุณกำลังมองหาห้องน้ำอยู่ใช่ไหม?", "คุณ GoPoo แล้วหรือยัง?", "คุณมีจุด GoPoo ดีๆแนะนำไหม?", "GoPoo กันเถอะ", "คุณรู้หรือไม่? หากหาจุด GoPoo ไม่ได้จริงๆ ทุ่งหญ้าข้างทางคือทางออกที่ดี", "ไม่ไหวแล้วใช่ไหม ตามหาจุด GoPoo เร็ว!", "GoPoo บรรยากาศดีๆ อยู่ที่ไหนกันนะ", "คุณรู้หรือไม่? จริงๆแล้วมีจุด GoPoo รอบตัวคุณ", "ตัวคุณมีกลิ่นนะ เพิ่ง GoPoo มารึเปล่า?", "GoPoo ที่ไหนดีนะ"];
+    return txt[Math.floor((Math.random() * 10))];
+
+  });
+  $( "#welcomeModal" ).modal( "show" );
+
+
+
+
+
   $("#rateYo").rateYo({
     onChange: function (rating, rateYoInstance) {
       $( "#container_rateYo" ).attr( "data-rating", rating );

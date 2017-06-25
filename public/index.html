@@ -76,13 +76,18 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <!-- GoPoo script & style -->
-    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.14">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.75"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.75"></script>
+    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.16">
+    <script type="text/javascript" src="/gopoo.js?v=1.0.77"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.77"></script>
     <!-- END -->
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map" align="center">
+      <img src="/image/launcher-icon-512.png" class="img-responsive" id="grass" />
+      <h1>
+        โหลดแผนที่ไม่ได้<br />ทุ่งหญ้าคือทางออกที่ดี
+      </h1>
+    </div>
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -110,7 +115,6 @@
     </div><!-- /.modal -->
 
     <!-- Modal Add -->
-
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -144,15 +148,86 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header">
-           <h4 class="modal-title">ตั้งค่าการค้นหา</h4>
-         </div>
+            <h4 class="modal-title">ตั้งค่าการค้นหา</h4>
+          </div>
           <div class="modal-body">
-            <ul id="list_setting" class="lsn">
-            </ul>
+            <ul id="list_setting" class="lsn"></ul>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Modal Welcome -->
+    <div id="welcomeModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header" align="center">
+            <img src="/image/logorb.png" class="img-responsive" />
+            <h3>สวัสดี!</h3>
+            <h4 id="welcome_text_caption"></h4>
+          </div>
+          <div class="modal-body">
+            <h5><strong>Tips</strong></h5>
+            <p>
+              หากคุณอยู่ในสถานที่ที่ไม่คุ้นเคยและกำลังมองหาจุด GoPoo ลองแตะที่แผนที่แล้วเลือก Find GoPoo ดูนะ
+            </p>
+              <table class="table">
+                <tr>
+                  <th>
+                    ภาพ
+                  </th>
+                  <th>
+                    คำแนะนำ
+                  </th>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/image/myicon.png" width="24" />
+                  </td>
+                  <td>
+                    ตำแหน่งปัจจุบันของคุณ ปรากฏอยู่บนแผนที่
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/image/getmylocation.png" width="24" />
+                  </td>
+                  <td>
+                    ปุ่มกดเพื่อเรียกตำแหน่งปัจจุบันของคุณพร้อมทั้งค้นหาจุด GoPoo ที่อยู่โดยรอบ ปรากฎอยู่ด้านล่างของหน้าจอ
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/image/mapicon22.png" width="24" />
+                  </td>
+                  <td>
+                    จุด GoPoo (ห้องน้ำ) ปรากฏอยู่บนแผนที่ <u>คลิก</u>ได้ เพื่อดูรายละเอียดและแสดงความคิดเห็นของคุณต่อจุด GoPoo นี้
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <img src="/image/mapicon.png" width="24" />
+                  </td>
+                  <td>
+                    จุด GoPoo (ห้องน้ำ) ที่มีผู้ค้นพบและบันทึกไว้ ปรากฏอยู่บนแผนที่ <u>คลิก</u>ได้ เพื่อดูรายละเอียดและแสดงความคิดเห็นของคุณต่อจุด GoPoo นี้
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/image/mapicon22.png" width="24" />
+                  </td>
+                  <td>
+                    จุด GoPoo (ห้องน้ำ) <u>คลิก</u>ได้ เพื่อดูรายละเอียด
+                  </td>
+                </tr>
+              </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Footer Nav -->
     <nav class="navbar navbar-default navbar-fixed-bottom">
@@ -175,7 +250,7 @@
               </div>
             </div>
             <div class="col-xs-4 tc">
-              <a href="#" onclick="locationNow()" id="bt_locatin_now" class="glyphicon  glyphicon-screenshot"></a>
+              <a href="#" id="bt_locatin_now" class="glyphicon  glyphicon-screenshot"></a>
             </div>
             <div class="col-xs-4">
               <img src="image/logorb.png" class="logorb" />
@@ -232,10 +307,13 @@
                  });
 
                  var r = '';
-                 if( review.length > 0 ) {
+                 if( Object.keys(review).length > 0 ) {
+                   var review_i = 0;
                    for( var i in review ) {
                      var v = review[i];
-                     if( v && ( $.inArray( v.id, pc ) >= 0 ) ) {
+                     if( v && ( $.inArray( v.id, pc ) >= 0 && review_i < 8 ) ) {
+                      review_i++;
+
                       r += '<div class="comment_list_block"><span class="container_comment_list_level">' + gp.lv( v.rating ) + '</span> <span class="ellipsis comment_list_text">' + v.review + '</span> <span class="glyphicon glyphicon-search mt5 fr bt_comment_go" data-id="' + v.id +'"></span></div>';
                      }
                    }
@@ -253,12 +331,7 @@
                })
              });
 
-             /** load human place **/
-             console.log( db );
-
              place_human( db );
-
-
 
           }, function (error) {
              console.log("Error: " + error.code);
@@ -270,10 +343,12 @@
         }
       });
 
-      if('serviceWorker' in navigator || 'PushManager' in window ) {
+      if('serviceWorker' in navigator) {
         navigator.serviceWorker
-                 .register('/sw.js?v=1.0.13')
+                 .register('/sw.js?v=1.0.14')
                  .then(function() { console.log("Service Worker Registered"); });
+      } else {
+        console.log("ERROR : Service Worker Not Registerd");
       }
 
 
