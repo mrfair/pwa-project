@@ -54,7 +54,8 @@ nav.navbar {
   margin-left: -5px;
 }
 
-#bt_comment_last {
+#bt_comment_last,
+#bt_setting_search {
   margin-top: 10px;
   font-size: 1.4em;
   color: #FFFFFF;
@@ -88,6 +89,7 @@ nav.navbar {
   font-weight: bold;
   border-bottom: 1px solid #E9E9E9;
   font-size: 14px;
+  padding: 0 5px;
 }
 
 .ellipsis {
@@ -96,6 +98,11 @@ nav.navbar {
   /* Required for text-overflow to do anything */
   white-space: nowrap;
   overflow: hidden;
+}
+
+.modal-body {
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .mt5 {
@@ -126,6 +133,10 @@ nav.navbar {
 }
 .vb {
   vertical-align: bottom;
+}
+
+.dib {
+  display: inline-block;
 }
 
 .fr {

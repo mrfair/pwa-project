@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GoPoo</title>
     <link rel="icon" href="/image/launcher-icon-2x.png" type="image/png" />
-
+    <script>
+      var db, latnow, lngnow;
+    </script>
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -17,6 +19,9 @@
 
     <!-- Moment Local.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/th.js"></script>
+
+    <!-- Jquery Cookies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -72,8 +77,8 @@
 
     <!-- GoPoo script & style -->
     <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.11">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.61"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.61"></script>
+    <script type="text/javascript" src="/gopoo.js?v=1.0.69"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.69"></script>
     <!-- END -->
   </head>
   <body>
@@ -133,14 +138,18 @@
       <div class="container-fluid">
           <div class="row">
             <div class="col-xs-4">
-
-              <div class="dropup">
+              <div class="dropup dib">
                 <span class="glyphicon glyphicon-edit" id="bt_comment_last" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
                 <ul class="dropdown-menu" aria-labelledby="bt_comment_last">
                   <li class="comment_list_header">
                     <h4>ความคิดเห็นตามจุด GoPoo</h4>
                   </li>
                   <li id="comment_list"></li>
+                </ul>
+              </div>
+              <div class="dropup dib ml10">
+                <span class="glyphicon glyphicon-cog" id="bt_setting_search" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+                <ul class="dropdown-menu" id="list_setting" aria-labelledby="bt_setting_search">
                 </ul>
               </div>
             </div>
@@ -157,7 +166,6 @@
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHqGWXvCatTzwwvOFBfEQDTNybWL-CpNI&libraries=places&hl=th&callback=initMap">
     </script>
     <script>
-      var db;
       document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
@@ -178,7 +186,7 @@
 
           ref.on("value", function( snapshot ) {
              db = snapshot.val();
-
+             db_check = "1";
              $("#bt_comment_last").click( function() {
                $("#comment_list").html(function() {
                  var review = {};
@@ -214,12 +222,30 @@
 
                $( ".bt_comment_go" ).each( function() {
                  $( this ).unbind( "click" ).bind( "click", function() {
-                   console.log( place_cache );
                    var id = $( this ).attr("data-id");
                    gp.modal_detail( place_cache[id], id );
                  });
                })
              });
+
+             /** load human place **/
+             console.log( db );
+             console.log( place_cache );
+
+             $.each( db, function( k, v ) {
+               if( v.type == 1 ) {
+                 var lat1 = parseFloat( latnow );
+                 var lng1 = parseFloat( lngnow );
+                 var lat2 = parseFloat( v.lat );
+                 var lng2 = parseFloat( v.lng );
+                 if(
+                 ) {
+                  createMarker( v );
+                 }
+
+               }
+             });
+
           }, function (error) {
              console.log("Error: " + error.code);
           });
@@ -230,7 +256,7 @@
         }
       });
 
-      if('serviceWorker' in navigator) {
+      if('serviceWorker' in navigator || 'PushManager' in window ) {
         navigator.serviceWorker
                  .register('/sw.js?v=1.0.13')
                  .then(function() { console.log("Service Worker Registered"); });

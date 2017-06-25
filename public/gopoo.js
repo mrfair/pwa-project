@@ -27,16 +27,22 @@ var gp = {
     return '<img src="/image/' + r + '">';
   },
   modal_detail : function( p, lo ) {
-    var plat= p.geometry.location.lat();
-    var plng = p.geometry.location.lng();
+    if( p.geometry ) {
+      pos_ = {
+        lat : p.geometry.location.lat(),
+        lng : p.geometry.location.lng()
+      };
+    } else {
+      pos_ = {
+        lat : parseFloat( p.lat ),
+        lng : parseFloat( p.lng )
+      };
+    }
 
-    map.setCenter({ lat: plat, lng: plng });
+    map.setCenter( pos_ );
 
     $( "#mycomment" ).val( "" );
     $( "#myModal" ).modal('show');
-
-    console.log( p );
-    map.setCenter( p.geometry.location );
 
     /* Check db */
 
@@ -44,22 +50,24 @@ var gp = {
     if( !db[lo] ) {
       var data = {
         id : lo,
-        lat : plat,
-        lng : plng,
-        name : p.name
+        lat : pos_.lat,
+        lng : pos_.lng,
+        name : p.name,
+        caption : p.vicinity,
+        type : 0 //0 =gmap 1 = human
       };
-      gp.db_insert_place( data );
+      gp.db_insert_place( data, $( function() {}) );
     }
 
     $("#modal-detail-title").html(function() {
       var r = '<div class="media-left">' +
                 '<a href="#">' +
-                  '<img class="media-object" src="' + p.icon + '">' +
+                  '<img class="media-object" width="70" src="' + ( p.icon ? p.icon : "/image/launcher-icon-2x.png" ) + '">' +
                 '</a>' +
               '</div>' +
               '<div class="media-body">' +
                 '<h4 class="media-heading mt10">' + p.name + '</h4>' +
-                '<p>' + p.vicinity + '</p>' +
+                '<p>' + ( p.vicinity ? p.vicinity : p.caption ) + '</p>' +
                 '<span id="count_poohere" class="f16">' +
                   db[lo].poohere +
                 '</span>' +
@@ -99,14 +107,18 @@ var gp = {
   lo_db_convert : function( a ) {
     return a.split(".").join("_");
   },
-  db_insert_place : function( d ) {
+  db_insert_place : function( d, callback ) {
+    var callback_  = callback;
     firebase.database().ref( d.id ).set({
       id : d.id,
       lat: d.lat,
       lng: d.lng,
       name : d.name,
       poohere : "0",
-      review : []
+      caption : d.caption,
+      type : d.type
+    }, function( e ) {
+      callback_;
     });
   },
   db_insert_comment : function( d ) {
@@ -156,6 +168,7 @@ var gp = {
 
 $( function(){
   console.log( "สวัสดีครับ ยินดีต้องรับสู่ GoPoo" );
+  locationNow();
 
   $("#rateYo").rateYo({
     onChange: function (rating, rateYoInstance) {
@@ -172,7 +185,80 @@ $( function(){
     }
   });
 
-  locationNow();
+  /** Setting item **/
+  var setting_item =  [
+                        { label: 'ร้านอาหาร', value: 'restaurant' },
+                        { label: 'โรงเรียน', value: 'school' },
+                        { label: 'ห้างสรรพสินค้า', value: 'supermarket' },
+                        { label: 'ร้านค้า', value: 'shop' },
+                        { label: 'โรงพยาบาล', value: 'hospital' },
+                        { label: 'ปั้มน้ำมัน', value: 'pestrol station' },
+                        { label: 'โรงแรม', value: 'hotel' },
+                        { label: 'โรงภาพยนตร์', value: 'cinema' },
+                        { label: 'วัด', value: 'worship' },
+                      ];
+  $.each( setting_item, function( k, v ) {
+    $( "#list_setting" ).prepend(
+      $( "<li>" )
+        .html( '<a href="#"><label><input type="checkbox" name="check_setting" value="' + v.value + '"> ' + v.label + '</label></a>' )
+    );
+  });
+
+  if( $.cookie("listsetting") ) {
+    $.each( $.cookie("listsetting").split(";") , function( k, v ) {
+      var input_name = 'input[name=check_setting][value="' + v + '"]';
+      $( input_name ).prop( "checked", true );
+    });
+  } else {
+    $.cookie( "listsetting", "pestrol station;worship" );
+  }
+
+  $( "input[name=check_setting]" ).each( function() {
+    $( this ).change( function() {
+      var chksetting = [];
+      $( "input[name=check_setting]:checked" ).each( function() {
+        chksetting.push( $(this).val() );
+      });
+      $.cookie("listsetting", chksetting.join(";") );
+      return false;
+    });
+  });
+
+  $('#list_setting').click(function(e) {
+      e.stopPropagation();
+  });
+
+
+
+  /** Add Place **/
+  $( "#bt_goopoo_add" ).click( function() {
+    var  pos_ = {
+      lat : $( this ).attr( "data-lat" ),
+      lng : $( this ).attr( "data-lng" )
+    };
+    var data = {
+      id : gp.lo_db_convert( 'p' + pos_.lat + pos_.lng ) ,
+      lat : pos_.lat,
+      lng : pos_.lng,
+      name : $("#namegopoo").val(),
+      caption : $("#detailgopoo").val(),
+      type : 1 //0 =gmap 1 = human
+    };
+
+    gp.db_insert_place( data, $( function() {
+      alert( "เพิ่มจุด GoPoo นี้แล้ว! สถานที่นี้จะช่วยให้เพื่อนมนุษย์หลุดพ้นจากความทุกข์ทรมานได้!!" );
+
+      var place = {
+        lat : pos_.lat,
+        lng : pos_.lng,
+        type : 1,
+      };
+
+      createMarker( place );
+      $( "#addModal" ).modal('toggle');
+    }) );
+  });
+
 });
 
 var sortObjectByKey = function(obj) {
@@ -194,4 +280,32 @@ var sortObjectByKey = function(obj) {
   });
 
   return sorted_obj;
+};
+
+
+
+alert(calcCrow(59.3293371,13.4877472,59.3225525,13.4619422).toFixed(1));
+
+
+
+//This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+function calcCrow(lat1, lon1, lat2, lon2)
+{
+  var R = 6371; // km
+  var dLat = toRad(lat2-lat1);
+  var dLon = toRad(lon2-lon1);
+  var lat1 = toRad(lat1);
+  var lat2 = toRad(lat2);
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+  return d;
+}
+
+// Converts numeric degrees to radians
+function toRad(Value)
+{
+    return Value * Math.PI / 180;
 }

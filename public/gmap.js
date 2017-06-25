@@ -29,15 +29,26 @@ function initMap() {
     $( "#bt_addmodal_show" )
       .unbind( "click" )
       .bind( "click", function() {
+        $( "#bt_goopoo_add" ).attr({
+          "data-lat" : pos.lat,
+          "data-lng" : pos.lng
+        });
         $( '#addModal' ).modal('show');
         infoWindow.close();
       });
   });
 }
 
+var db_check = "0";
 function placeshow( pos ) {
   /**ค้นหาสถานที่ **/
-  var keyword = ['gas', 'worship', 'market'];
+  var keyword = [];
+  if( $.cookie("listsetting") ) {
+    keyword = $.cookie("listsetting").split(";");
+  } else {
+    keyword = ["pestrol station","worship"];
+  }
+
   $.each( keyword, function( k, v ) {
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
@@ -46,6 +57,7 @@ function placeshow( pos ) {
       keyword: [v]
     }, callback);
   });
+
 }
 
 function locationNow() {
@@ -61,6 +73,9 @@ function locationNow() {
       mymarker( pos );
       map.setCenter(pos);
       placeshow( pos );
+
+      lngnow = pos.lng;
+      latnow = pos.lat;
 
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
@@ -79,6 +94,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         'Error: The Geolocation service failed.' :
                         'Error: Your browser doesn\'t support geolocation.');
   infoWindow.open(map);
+  map.setCenter(pos);
 }
 
 function mymarker( position ) {
@@ -105,14 +121,26 @@ function callback(results, status) {
 var place_cache = {};
 function createMarker(place) {
   var p = place;
-  var lo = gp.lo_db_convert( 'p' + p.geometry.location.lat() + p.geometry.location.lng() ) ;
+  var pos_ = {};
+  if( p.geometry ) {
+    pos_ = {
+      lat : p.geometry.location.lat(),
+      lng : p.geometry.location.lng()
+    };
+  } else {
+    pos_ = {
+      lat : parseFloat( p.lat ),
+      lng : parseFloat( p.lng )
+    };
+  }
 
-  var placeLoc = p.geometry.location;
+  var lo = gp.lo_db_convert( 'p' + pos_.lat + pos_.lng ) ;
+
   var marker = new google.maps.Marker({
     id: lo,
     map: map,
-    position: p.geometry.location,
-    icon: "/image/mapicon22.png",
+    position: pos_,
+    icon: ( p.type == "1" ? "/image/mapicon.png" : "/image/mapicon22.png" ),
   });
 
   google.maps.event.addListener( marker, 'click', function() {
