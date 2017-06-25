@@ -1,6 +1,13 @@
 {
   "short_name": "GoPoo",
   "name": "GoPoo. Where you can poo.",
+  "description": "The app that helps you find the toilet in town!",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#b7732a",
+  "theme_color": "#563217",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "image/launcher-icon-2x.png",
@@ -27,11 +34,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "start_url": "index.html",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#b7732a",
-  "theme_color": "#563217",
-  "prefer_related_applications": false
+  ]
 }

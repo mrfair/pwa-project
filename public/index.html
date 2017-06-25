@@ -8,6 +8,9 @@
     <script>
       var db, latnow, lngnow;
     </script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Mitr" rel="stylesheet">
+
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -76,9 +79,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="128x128" href="image/launcher-icon-128.png">
 
     <!-- GoPoo script & style -->
-    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.16">
-    <script type="text/javascript" src="/gopoo.js?v=1.0.77"></script>
-    <script type="text/javascript" src="/gmap.js?v=1.0.77"></script>
+    <link rel="stylesheet" type="text/css" href="/style.css?v=1.0.24">
+    <script type="text/javascript" src="/gopoo.js?v=1.0.85"></script>
+    <script type="text/javascript" src="/gmap.js?v=1.0.85"></script>
     <!-- END -->
   </head>
   <body>
@@ -103,7 +106,7 @@
             </div>
             <textarea class="form-control mt5" id="mycomment" placeholder="แสดงความคิดเห็น"></textarea>
             <div class="mt10">
-              <button type="button" class="btn btn-primary fr mt5" id="bt_comment_add">แสดงความเห็น</button>
+              <button type="button" class="btn btn-warning fr mt5" id="bt_comment_add">แสดงความเห็น</button>
               <div class="tl" id="container_rateYo" data-rating="5">
                 ให้คะแนน
                 <span id="rateYo"></span>
@@ -205,7 +208,7 @@
                     <img src="/image/mapicon22.png" width="24" />
                   </td>
                   <td>
-                    จุด GoPoo (ห้องน้ำ) ปรากฏอยู่บนแผนที่ <u>คลิก</u>ได้ เพื่อดูรายละเอียดและแสดงความคิดเห็นของคุณต่อจุด GoPoo นี้
+                    จุด GoPoo (ห้องน้ำ) ปรากฏอยู่บนแผนที่ <u>คลิก</u>ได้ เพื่อดูรายละเอียดและแสดงความคิดเห็นของคุณต่อจุด GoPoo นี้ <br />*สามารถกดปุ่ม GoPoo<img src="/image/launcher-icon-2x.png" height="20" /> เพื่อยืนยันว่าคุณได้ทำภารกิจ ณ สถานที่แห่งนี้แล้ว
                   </td>
                 </tr>
 
@@ -214,7 +217,7 @@
                     <img src="/image/mapicon.png" width="24" />
                   </td>
                   <td>
-                    จุด GoPoo (ห้องน้ำ) ที่มีผู้ค้นพบและบันทึกไว้ ปรากฏอยู่บนแผนที่ <u>คลิก</u>ได้ เพื่อดูรายละเอียดและแสดงความคิดเห็นของคุณต่อจุด GoPoo นี้
+                    จุด GoPoo (ห้องน้ำ) ที่มีผู้ค้นพบและบันทึกไว้ ปรากฏอยู่บนแผนที่ <u>คลิก</u>ได้ เพื่อดูรายละเอียดและแสดงความคิดเห็นของคุณต่อจุด GoPoo นี้ <br />*สามารถกดปุ่ม GoPoo<img src="/image/launcher-icon-2x.png" height="20" /> เพื่อยืนยันว่าคุณได้ทำภารกิจ ณ สถานที่แห่งนี้แล้ว
                   </td>
                 </tr>
                 <tr>
@@ -401,7 +404,7 @@
 
       if('serviceWorker' in navigator) {
         navigator.serviceWorker
-                 .register('/sw.js?v=1.0.14')
+                 .register('/sw.js?v=1.0.15')
                  .then(function() { console.log("Service Worker Registered"); });
       } else {
         console.log("ERROR : Service Worker Not Registerd");

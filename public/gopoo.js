@@ -27,6 +27,9 @@ var gp = {
     return '<img src="/image/' + r + '">';
   },
   modal_detail : function( p, lo ) {
+
+    $('[data-toggle="dropdown"]').parent().removeClass('open');
+
     if( p.geometry ) {
       pos_ = {
         lat : p.geometry.location.lat(),
@@ -127,7 +130,8 @@ var gp = {
       rating : d.rating,
       datetime : moment().format('MMMM Do YYYY, h:mm:ss a')
     }, function( e ) {
-      alert( "เพิ่มความคิดเห็นของคุณแล้วนะ!" );
+      //alert( "เพิ่มความคิดเห็นของคุณแล้วนะ!" );
+      $("#mycomment").val("");
       gp.comment_load( db[d.id].review );
     });
   },
@@ -193,6 +197,10 @@ $( function(){
     $( "#welcomeModal" ).modal( "toggle" );
   });
 
+  $('.dropdown-menu').click(function(e) {
+    e.stopPropagation();
+  });
+
   $("#rateYo").rateYo({
     onChange: function (rating, rateYoInstance) {
       $( "#container_rateYo" ).attr( "data-rating", rating );
@@ -248,6 +256,7 @@ $( function(){
         chksetting.push( $(this).val() );
       });
       $.cookie("listsetting", chksetting.join(";") );
+      locationNow();
       return false;
     });
   });
@@ -280,13 +289,7 @@ $( function(){
     gp.db_insert_place( data, $( function() {
       alert( "เพิ่มจุด GoPoo นี้แล้ว! สถานที่นี้จะช่วยให้เพื่อนมนุษย์หลุดพ้นจากความทุกข์ทรมานได้!!" );
 
-      var place = {
-        lat : pos_.lat,
-        lng : pos_.lng,
-        type : 1,
-      };
-
-      createMarker( place );
+      createMarker( data );
       $( "#addModal" ).modal('toggle');
     }) );
   });

@@ -13,7 +13,7 @@ function initMap() {
     };
 
     var contentString =
-                '<table style="font-size:10px; line-height:22px; font-weight:bold; text-align:center;" class="ml10" cellpadding="0" cellspacing="0" border="0"><tr valign="bottom"><td><img src="/image/addgopoo.png" id="bt_addmodal_show"></td><td rowspan="2" width="20"></td><td><img src="/image/findgopoo.png" height="64" id="bt_place_search"></td></tr><tr><td><span style="margin-left:-10px;">Add GoPoo</span></td><td>Find GoPoo</td></tr></table>';
+                '<table style="font-size:10px; line-height:22px; font-weight:bold; text-align:center;" cellpadding="0" cellspacing="0" border="0"><tr valign="bottom"><td><img src="/image/addgopoo.png" id="bt_addmodal_show"></td><td rowspan="2" width="20"></td><td><img src="/image/findgopoo.png" height="64" id="bt_place_search"></td></tr><tr><td><span style="margin-left:-10px;">Add GoPoo</span></td><td>Find GoPoo</td></tr></table>';
     infoWindow.setPosition(pos);
     infoWindow.setContent( contentString );
     infoWindow.open(map);
@@ -34,6 +34,10 @@ function initMap() {
     $( "#bt_addmodal_show" )
       .unbind( "click" )
       .bind( "click", function() {
+
+        $("#namegopoo").val("");
+        $("#detailgopoo").val("");
+
         $( "#bt_goopoo_add" ).attr({
           "data-lat" : pos.lat,
           "data-lng" : pos.lng

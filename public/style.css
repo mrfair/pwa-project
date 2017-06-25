@@ -4,6 +4,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: #b7732a;
+  font-family: 'Mitr', sans-serif;
+  font-size: 15px;
 }
 
 html {
@@ -25,6 +27,10 @@ a:focus {
 
 #grass {
   margin-top: 20px;
+}
+
+.gm-style-iw {
+  min-width: 178px; 
 }
 
 #bt_locatin_now {
@@ -127,6 +133,12 @@ nav.navbar {
 .modal-content {
   border-radius: 0;
   border-top: 5px solid #563217;
+}
+
+.btn-warning {
+  border-radius: 0;
+  border:1px solid #b7732a;
+  background-image: linear-gradient(to bottom,#d0822e 0,#b7732a 100%);
 }
 
 .mt5 {
