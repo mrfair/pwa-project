@@ -110,8 +110,17 @@ nav.navbar {
   overflow: hidden;
 }
 
+.modal-header {
+  background-color: #b7732a;
+  color: #FFF;
+}
+
+.modal-footer {
+  border-top: 3px solid #563217;
+}
+
 .modal-body {
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -176,6 +185,10 @@ nav.navbar {
 
 .f16 {
   font-size: 16px;
+}
+
+.f25 {
+  font-size: 25px;
 }
 
 .lsn {

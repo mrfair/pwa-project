@@ -120,6 +120,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="modal-title media">
+              <div align="center">
+                <img src="/image/shockpoo.png" />
+              </div>
               <h4>คุณค้นพบจุด GoPoo อย่างนั้นหรือ?</h4>
               <p>
                 สถานที่แห่งนี้อาจช่วยเพื่อนมนุษย์ให้หลุดพ้นจากความทุกข์ทรมานในยามฉุกเฉินได้ คุณเป็นผู้ค้นพบคนแรก โปรดตั้งชื่อให้กับสถานที่แห่งนี้
@@ -163,18 +166,18 @@
         <!-- Modal content-->
         <div class="modal-content">
           <div class="modal-header" align="center">
-            <img src="/image/logorb.png" class="img-responsive" />
+            <img src="/image/logorb.png" height="50" />
             <h3>สวัสดี!</h3>
             <h4 id="welcome_text_caption"></h4>
           </div>
           <div class="modal-body">
-            <h5><strong>Tips</strong></h5>
-            <p>
+            <p class="bg-warning">
+              <h5><strong><u>Tips</u></strong></h5>
               หากคุณอยู่ในสถานที่ที่ไม่คุ้นเคยและกำลังมองหาจุด GoPoo ลองแตะที่แผนที่แล้วเลือก Find GoPoo ดูนะ
             </p>
               <table class="table">
                 <tr>
-                  <th>
+                  <th width="30">
                     ภาพ
                   </th>
                   <th>
@@ -216,14 +219,67 @@
                 </tr>
                 <tr>
                   <td>
-                    <img src="/image/mapicon22.png" width="24" />
+                    <img src="/image/addgopoo.png" width="24" />
                   </td>
                   <td>
-                    จุด GoPoo (ห้องน้ำ) <u>คลิก</u>ได้ เพื่อดูรายละเอียด
+                    Add GoPoo ปุ่มเพิ่มจุด GoPoo (ห้องน้ำ) ปรากฏขึ้นหลังจากคลิกในตำแหน่งว่างๆ บนแผนที่ ใช้ในกรณีที่คุณต้องการสร้างจุด GoPoo ที่ยังไม่มีบนแผนที่
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="/image/findgopoo.png" width="24" />
+                  </td>
+                  <td>
+                    Find GoPoo ปุ่มค้นหาจุด GoPoo (ห้องน้ำ) รอบๆ บริเวณตำแหน่งที่คลิก ปรากฏขึ้นหลังจากคลิกในตำแหน่งว่างๆ บนแผนที่
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="glyphicon glyphicon-edit f25"></span>
+                  </td>
+                  <td>
+                    ปุ่มแสดงความคิดเห็นบางส่วนของจุด GoPoo โดยรอบ ปรากฎอยู่ด้านล่างซ้ายของหน้าจอ สามารถคลิกปุ่ม <span class="glyphicon glyphicon-search"></span> เพื่อตามไปดูความคิดเห็นอื่นๆ ของจุด GooPoo นั้นได้
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="glyphicon glyphicon-cog f25"></span>
+                  </td>
+                  <td>
+                    ปุ่มตั้งค่าประเภทการค้นหาจุด GoPoo โดยรอบ ปรากฎอยู่ด้านล่างซ้ายของหน้าจอ
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <h5>ระดับความพึงพอใจจากต่ำไปสูง(ซ้าย>ขวา)</h5>
+                    <div align="center">
+                      <img src="/image/lv1.png" width="34" />
+                      <img src="/image/lv2.png" width="34" />
+                      <img src="/image/lv3.png" width="34" />
+                      <img src="/image/lv4.png" width="34" />
+                      <img src="/image/lv5.png" width="34" />
+                    </div>
+                    <br />
+                    <p>
+                      คุณสามารถเรียกหน้าต่างข้อแนะนำได้จากรูปโลโก้ GoPoo ด้านขวาล่างของหน้าจอ
+                    </p>
                   </td>
                 </tr>
               </table>
-
+          </div>
+          <div class="modal-footer">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td align="left">
+                  <p>
+                    <label><input type="checkbox" id="welcome_hide" /> ไม่ต้องแสดงอีก</label>
+                  </p>
+                </td>
+                <td align="right">
+                  <button type="button" class="btn btn-warning fr mt5 bt_welcome_toggle">โอเค</button>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
@@ -253,7 +309,7 @@
               <a href="#" id="bt_locatin_now" class="glyphicon  glyphicon-screenshot"></a>
             </div>
             <div class="col-xs-4">
-              <img src="image/logorb.png" class="logorb" />
+              <img src="image/logorb.png" class="logorb bt_welcome_toggle" />
             </div>
         </div>
       </div>

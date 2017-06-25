@@ -181,11 +181,17 @@ $( function(){
     return txt[Math.floor((Math.random() * 10))];
 
   });
-  $( "#welcomeModal" ).modal( "show" );
 
+  if( $.cookie( "welcomehide") != "1" ) {
+    $( "#welcomeModal" ).modal( "show" );
+  }
 
-
-
+  $( ".bt_welcome_toggle" ).click(function() {
+    if( $("#welcome_hide").prop( "checked" ) ) {
+      $.cookie( "welcomehide", "1" );
+    }
+    $( "#welcomeModal" ).modal( "toggle" );
+  });
 
   $("#rateYo").rateYo({
     onChange: function (rating, rateYoInstance) {
